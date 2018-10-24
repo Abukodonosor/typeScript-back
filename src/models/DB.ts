@@ -7,7 +7,7 @@ export class DB{
 
     public static init(): void{
         this.conn = mysql.createConnection(config);
-        this.conn.connect();
+        this.conn.connect(); 
     }
 
     public static close():void{

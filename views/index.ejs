@@ -4,11 +4,88 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Log-IN</title>
+    <!-- <link rel="stylesheet" href="/stylesheets/index.css"> -->
+    <style>
+        body{
+            padding: 0px;
+            margin: 0px;
+            background:rgb(90,150,130);
+        }
+
+        #log-content{
+            background:rgb(200,100,120);
+            width:600px;
+            height:350px;
+            margin:100px auto;
+            color: #f4f4f4;    
+            border-radius:20px;
+            border:2px solid #f4f4f4;
+            position:relative;
+        }
+        h1{
+            font-size: 25px;
+        }
+        .log-content-params{
+            text-align:center;
+            margin:auto;
+            width:300px;
+            height:200px;
+            padding-top:30px;
+        }
+
+        .log{
+            display:block;
+            width:300px;
+            height:50px;
+            font-size:20px
+        }
+        .log-submit{
+            text-align:center;
+            margin:auto;
+            display:block;
+            width:150px;
+            height:70px;
+            border-radius: 3px;
+            padding:10px;
+            background: rgb(50,150,130);
+            font-size:20px;
+            color:white;
+            margin-top:20px;
+        }
+        .register{
+            position:absolute;
+            width:100px;
+            height:100px;
+            bottom:-50px;
+            right:-50px;
+            background:black;
+            border-radius:50px;
+            display:block;
+        }
+        .register a{
+        color:white;
+        line-height:100px;
+        text-align: center;
+        margin-left: 10px;
+        font-size:27px;
+        }
+    </style>
+
 </head>
 <body>
-    <h1>Express</h1>
-    <p>Welcome to Express</p>
-    <%= title %>
+    <div id="log-content">
+        <div class="log-content-params">
+            <form action="/logIn" method="POST">
+                <h1>Start your login journey:</h1>
+                <input class='log' name='email' type='email' placeholder="enter email"/>
+                <input class='log' name='password' type='password' placeholder="password"/>
+                <input class='log-submit'type="submit" value="log-in"/>
+            </form>
+        </div>
+        <div class='register'>
+            <a href=''>register</a>
+        </div>
+    </div>
 </body>
 </html>

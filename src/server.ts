@@ -6,6 +6,10 @@ import errorHandler = require('errorhandler');
 import methodOverride = require("method-override");
 import logger = require('morgan');
 import {DB} from './models/DB'
+import * as ExpressSession from 'express-session';
+/* import Middlewares*/
+import {AuthenticationMiddleware} from './middlewares/loginMiddleware';
+
 
 /* import Controllers*/
 import { IndexController } from "./controllers/indexController";
@@ -41,8 +45,14 @@ export class Server {
         this.app.use(express.static(path.join(__dirname, 'views')));
         //init db connection
         DB.init();
-        //use override middlware
-        this.app.use(methodOverride());
+
+        this.app.use(ExpressSession({name:'user_sid', secret: 'somerandonstuffs', resave: false, saveUninitialized: true, }));
+        
+        //active middlwares
+        this.app.use(AuthenticationMiddleware.cookieSafe);
+        this.app.use(AuthenticationMiddleware.loginCheck);
+        
+        // this.app.use(myMiddleware);
 
         //catch 404 and forward to error handler
         this.app.use(function(err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
