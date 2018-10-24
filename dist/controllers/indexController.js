@@ -50,6 +50,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var BaseController_1 = require("./BaseController");
 var UserModel_1 = require("../models/UserModel");
+var ContractModel_1 = require("../models/ContractModel");
 /**
  * Controller fo
  */
@@ -68,7 +69,7 @@ var IndexController = /** @class */ (function (_super) {
         router.get("/", function (req, res, next) {
             new IndexController().index(req, res, next);
         });
-        router.post("/logIn", function (req, res, next) {
+        router.post('/home', function (req, res, next) {
             new IndexController().logIn(req, res, next);
         });
         router.get("/LogOut", function (req, res, next) {
@@ -91,7 +92,6 @@ var IndexController = /** @class */ (function (_super) {
                         console.log("ANSWER IS :" + answer);
                         options = {
                             "message": "Lets freak out",
-                            "covek": JSON.stringify(noviCovek)
                         };
                         //render template
                         this.render(req, res, "index", options);
@@ -100,9 +100,10 @@ var IndexController = /** @class */ (function (_super) {
             });
         });
     };
+    //login route, check if user exist => true [fatch all contracts and pass them to the view]: else [ render log page with error message]
     IndexController.prototype.logIn = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var email, password, user, options;
+            var email, password, user, contracts, options;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -111,8 +112,13 @@ var IndexController = /** @class */ (function (_super) {
                         return [4 /*yield*/, UserModel_1.User.exist(email, password)];
                     case 1:
                         user = _a.sent();
+                        return [4 /*yield*/, ContractModel_1.Contract.takeAll(user)];
+                    case 2:
+                        contracts = _a.sent();
+                        console.log(contracts);
                         options = {
                             "user": user,
+                            "contracts": contracts
                         };
                         //render template
                         this.render(req, res, "home", options);
@@ -121,6 +127,7 @@ var IndexController = /** @class */ (function (_super) {
             });
         });
     };
+    //logOur route
     IndexController.prototype.logOut = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {

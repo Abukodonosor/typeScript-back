@@ -108,34 +108,13 @@
         </div>
         <div id='content-body'>
             <div id='all-contracts'>
-                <div class='contract' data-id=''>
+            <% for (contract of contracts) { %>
+                <div class='contract' data-id='<%= contract.id %>'>
                     <div class='contract-option edit'>edit</div>
                     <div class='contract-option delete'>delete</div>
-                    <h4 class='title'>Contract title I jos po nesto</h4>
+                    <h4 class='title'><%= contract.title %></h4>
                 </div>
-                <div class='contract' data-id=''>
-                    <div class='contract-option edit'>edit</div>
-                    <div class='contract-option delete'>delete</div>
-                    <h4 class='title'>Contract title I jos po nesto</h4>
-                </div>
-                <div class='contract' data-id=''>
-                    <div class='contract-option edit'>edit</div>
-                    <div class='contract-option delete'>delete</div>
-                    <h4 class='title'>Contract title I jos po nesto</h4>
-                </div>
-                <div class='contract' data-id=''>
-                    <div class='contract-option edit'>edit</div>
-                    <div class='contract-option delete'>delete</div>
-                    <h4 class='title'>Contract title I jos po nesto</h4>
-                </div>
-                <div class='contract' data-id=''>
-                    <div class='contract-option edit'>edit</div>
-                    <div class='contract-option delete'>delete</div>
-                </div>
-                <div class='contract' data-id=''>
-                    <div class='contract-option edit'>edit</div>
-                    <div class='contract-option delete'>delete</div>
-                </div>
+            <% } %>
                 
             </div>
         </div>

@@ -12,7 +12,7 @@ import {AuthenticationMiddleware} from './middlewares/loginMiddleware';
 
 
 /* import Controllers*/
-import { IndexController } from "./controllers/indexController";
+import { UserController } from "./controllers/UserController";
 
 
 export class Server {
@@ -51,8 +51,6 @@ export class Server {
         //active middlwares
         this.app.use(AuthenticationMiddleware.cookieSafe);
         this.app.use(AuthenticationMiddleware.loginCheck);
-        
-        // this.app.use(myMiddleware);
 
         //catch 404 and forward to error handler
         this.app.use(function(err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
@@ -69,7 +67,7 @@ export class Server {
         router = express.Router();
         
         /* All Controllers goes here */
-        IndexController.create(router);
+        UserController.create(router);
 
         this.app.use(router);
     }

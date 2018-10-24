@@ -48,91 +48,99 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var DB_1 = require("./DB");
-var User = /** @class */ (function (_super) {
-    __extends(User, _super);
-    function User(email, password, username, id) {
-        if (username === void 0) { username = null; }
-        if (id === void 0) { id = null; }
-        var _this = _super.call(this) || this;
-        _this.email = email;
-        _this.password = password;
-        _this.username = username;
-        _this.id = id;
-        return _this;
+var BaseController_1 = require("./BaseController");
+var UserModel_1 = require("../models/UserModel");
+var ContractModel_1 = require("../models/ContractModel");
+/**
+ * Controller Index
+ */
+var UserController = /** @class */ (function (_super) {
+    __extends(UserController, _super);
+    /**
+     * Constructor
+     */
+    function UserController() {
+        return _super.call(this) || this;
     }
-    User.prototype.getId = function () {
-        return this.id;
+    UserController.create = function (router) {
+        //log
+        console.log("[IndexController::create] Creating IndexController route:");
+        //add page route
+        router.get("/", function (req, res, next) {
+            new UserController().index(req, res, next);
+        });
+        router.post('/home', function (req, res, next) {
+            new UserController().logIn(req, res, next);
+        });
+        router.get("/LogOut", function (req, res, next) {
+            new UserController().logOut(req, res, next);
+        });
+        // add more routes
     };
-    User.prototype.save = function () {
+    UserController.prototype.index = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var _this = this;
+            var noviCovek, answer, options;
             return __generator(this, function (_a) {
-                return [2 /*return*/, new Promise(function (resolve) {
-                        if (_this.id == undefined)
-                            _this.insertNew();
-                        else
-                            _this.updateExisting();
-                        resolve(true);
-                    })];
+                switch (_a.label) {
+                    case 0:
+                        //set custom title
+                        this.title = "This is title of my action";
+                        noviCovek = new UserModel_1.User("djoka@gmail.com", "djoka123", "djoka123");
+                        return [4 /*yield*/, noviCovek.save()];
+                    case 1:
+                        answer = _a.sent();
+                        console.log("ANSWER IS :" + answer);
+                        options = {
+                            "message": "Lets freak out",
+                        };
+                        //render template
+                        this.render(req, res, "index", options);
+                        return [2 /*return*/];
+                }
             });
         });
     };
-    User.prototype.insertNew = function () {
+    //login route, check if user exist => true [fatch all contracts and pass them to the view]: else [ render log page with error message]
+    UserController.prototype.logIn = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var params;
+            var email, password, user, contracts, options;
             return __generator(this, function (_a) {
-                params = [this.username, this.password, this.email];
-                return [2 /*return*/, new Promise(function (resolve) {
-                        DB_1.DB.conn.query("INSERT INTO " + User.tableName + " (username, password, email) VALUES (?,?,?)", params, function (err, rows) {
-                            if (err)
-                                throw err;
-                            resolve(true);
-                        });
-                    })];
+                switch (_a.label) {
+                    case 0:
+                        email = req.body.email;
+                        password = req.body.password;
+                        return [4 /*yield*/, UserModel_1.User.exist(email, password)];
+                    case 1:
+                        user = _a.sent();
+                        return [4 /*yield*/, ContractModel_1.Contract.takeAll(user)];
+                    case 2:
+                        contracts = _a.sent();
+                        options = {
+                            "user": user,
+                            "contracts": contracts
+                        };
+                        //render template
+                        this.render(req, res, "home", options);
+                        return [2 /*return*/];
+                }
             });
         });
     };
-    ;
-    User.prototype.updateExisting = function () {
+    //logOut route
+    UserController.prototype.logOut = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var params;
             return __generator(this, function (_a) {
-                params = [this.username, this.password, this.email, this.id];
-                return [2 /*return*/, new Promise(function (resolve) {
-                        DB_1.DB.conn.query("UPDATE " + User.tableName + " username = ?, password = ?, email = ? WHERE id = ?", params, function (err, rows) {
-                            if (err)
-                                throw err;
-                            resolve(true);
-                        });
-                    })];
+                if (req.session.user && req.cookies.user_sid) {
+                    res.clearCookie('user_sid');
+                    res.redirect('/');
+                }
+                else {
+                    res.redirect('/');
+                }
+                return [2 /*return*/];
             });
         });
     };
-    ;
-    //static functions
-    User.exist = function (email, password) {
-        return __awaiter(this, void 0, void 0, function () {
-            var params;
-            var _this = this;
-            return __generator(this, function (_a) {
-                params = [email, password];
-                return [2 /*return*/, new Promise(function (resolve) {
-                        _this.conn.query("SELECT * FROM " + User.tableName + " WHERE email = ? AND password = ?;", params, function (err, rows) {
-                            if (err)
-                                throw err;
-                            console.log("name:" + rows[0].email);
-                            if (rows.length)
-                                resolve({ email: rows[0].email, password: rows[0].password, username: rows[0].username, id: rows[0].id });
-                            else
-                                resolve(false);
-                        });
-                    })];
-            });
-        });
-    };
-    //name of table in our DB
-    User.tableName = 'user';
-    return User;
-}(DB_1.DB));
-exports.User = User;
+    return UserController;
+}(BaseController_1.BaseController));
+exports.UserController = UserController;

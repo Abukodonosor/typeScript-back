@@ -10,7 +10,7 @@ var ExpressSession = require("express-session");
 /* import Middlewares*/
 var loginMiddleware_1 = require("./middlewares/loginMiddleware");
 /* import Controllers*/
-var indexController_1 = require("./controllers/indexController");
+var UserController_1 = require("./controllers/UserController");
 var Server = /** @class */ (function () {
     function Server() {
         this.app = express();
@@ -52,7 +52,7 @@ var Server = /** @class */ (function () {
         var router;
         router = express.Router();
         /* All Controllers goes here */
-        indexController_1.IndexController.create(router);
+        UserController_1.UserController.create(router);
         this.app.use(router);
     };
     /* declare api endpoints*/

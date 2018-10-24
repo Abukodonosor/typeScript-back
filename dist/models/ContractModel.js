@@ -49,22 +49,18 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var DB_1 = require("./DB");
-var User = /** @class */ (function (_super) {
-    __extends(User, _super);
-    function User(email, password, username, id) {
-        if (username === void 0) { username = null; }
+var Contract = /** @class */ (function (_super) {
+    __extends(Contract, _super);
+    function Contract(title, company, price_year, id) {
         if (id === void 0) { id = null; }
         var _this = _super.call(this) || this;
-        _this.email = email;
-        _this.password = password;
-        _this.username = username;
+        _this.title = title;
+        _this.company = company;
+        _this.price_year = price_year;
         _this.id = id;
         return _this;
     }
-    User.prototype.getId = function () {
-        return this.id;
-    };
-    User.prototype.save = function () {
+    Contract.prototype.save = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
@@ -78,13 +74,13 @@ var User = /** @class */ (function (_super) {
             });
         });
     };
-    User.prototype.insertNew = function () {
+    Contract.prototype.insertNew = function () {
         return __awaiter(this, void 0, void 0, function () {
             var params;
             return __generator(this, function (_a) {
-                params = [this.username, this.password, this.email];
+                params = [this.title, this.company, this.price_year,];
                 return [2 /*return*/, new Promise(function (resolve) {
-                        DB_1.DB.conn.query("INSERT INTO " + User.tableName + " (username, password, email) VALUES (?,?,?)", params, function (err, rows) {
+                        DB_1.DB.conn.query("INSERT INTO " + Contract.tableName + " (title, company, price_year, user_id) VALUES (?,?,?,?)", params, function (err, rows) {
                             if (err)
                                 throw err;
                             resolve(true);
@@ -94,13 +90,13 @@ var User = /** @class */ (function (_super) {
         });
     };
     ;
-    User.prototype.updateExisting = function () {
+    Contract.prototype.updateExisting = function () {
         return __awaiter(this, void 0, void 0, function () {
             var params;
             return __generator(this, function (_a) {
-                params = [this.username, this.password, this.email, this.id];
+                params = [this.title, this.company, this.price_year, this.id];
                 return [2 /*return*/, new Promise(function (resolve) {
-                        DB_1.DB.conn.query("UPDATE " + User.tableName + " username = ?, password = ?, email = ? WHERE id = ?", params, function (err, rows) {
+                        DB_1.DB.conn.query("UPDATE " + Contract.tableName + " title = ?, company = ?, price_year = ? WHERE id = ?", params, function (err, rows) {
                             if (err)
                                 throw err;
                             resolve(true);
@@ -111,28 +107,31 @@ var User = /** @class */ (function (_super) {
     };
     ;
     //static functions
-    User.exist = function (email, password) {
+    Contract.takeAll = function (user) {
         return __awaiter(this, void 0, void 0, function () {
-            var params;
+            var params, result;
             var _this = this;
             return __generator(this, function (_a) {
-                params = [email, password];
+                params = [user.id];
+                result = [];
                 return [2 /*return*/, new Promise(function (resolve) {
-                        _this.conn.query("SELECT * FROM " + User.tableName + " WHERE email = ? AND password = ?;", params, function (err, rows) {
+                        DB_1.DB.conn.query("SELECT * FROM " + _this.tableName + " WHERE user_id = ?", params, function (err, rows) {
                             if (err)
                                 throw err;
-                            console.log("name:" + rows[0].email);
-                            if (rows.length)
-                                resolve({ email: rows[0].email, password: rows[0].password, username: rows[0].username, id: rows[0].id });
-                            else
-                                resolve(false);
+                            if (rows.length) {
+                                for (var _i = 0, rows_1 = rows; _i < rows_1.length; _i++) {
+                                    var row = rows_1[_i];
+                                    result.push(new Contract(row.title, row.company_name, row.price_year, row.id));
+                                }
+                            }
+                            resolve(result);
                         });
                     })];
             });
         });
     };
     //name of table in our DB
-    User.tableName = 'user';
-    return User;
+    Contract.tableName = 'contract';
+    return Contract;
 }(DB_1.DB));
-exports.User = User;
+exports.Contract = Contract;

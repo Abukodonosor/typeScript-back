@@ -1,7 +1,7 @@
 import {DB} from './DB';
 
 
-export class User extends DB{
+export class User extends DB implements UserInter{
 
     public id: number;
     public email: string;
@@ -16,7 +16,11 @@ export class User extends DB{
         this.email = email;
         this.password = password;
         this.username = username;
+        this.id = id;
+    }
 
+    public getId(){
+        return this.id;
     }
 
     public async save(){
@@ -62,20 +66,12 @@ export class User extends DB{
 
                     console.log("name:"+rows[0].email);
                 if(rows.length)
-                    resolve( new User(rows[0].email,rows[0].password,rows[0].username,rows[0].id) );
+                    resolve( {email:rows[0].email,password:rows[0].password,username:rows[0].username,id:rows[0].id} );
                 else
                     resolve(false);
             });
         });
     }
 
-    static findAll(){
-        return new Promise(resolve=>{
-            
-            this.conn.query("SELECT * FROM user",[],(err,rows)=>{
-                resolve(rows);
-            });
-        });
-    }
 
 }
