@@ -1,6 +1,7 @@
 # typeScript-back
 
 This is my first time useing typeScript, so i tried to make wraper around express, and to use node with much more structural power.
+(so excuse if i didn't use best industrial practices)
 
 Need to implement:
 -bcrypt for password
