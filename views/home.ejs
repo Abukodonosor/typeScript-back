@@ -5,105 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Home</title>
-    <style>
-        #content{
-            width: 100%;
-            min-height: 700px;
-        }
-        #header{
-            height: 150px;
-            widows: inherit;
-            background: rgb(90,150,130);
-            position: relative;
-        }
-        #content-body{
-            min-height: 450px;
-            width: 800px;
-            border:2px solid rgb(90,150,130);
-            background:#f4f4f4;
-            margin: 50px auto;
-        }
-        .btn{
-            width:100px;
-            height: 70px;
-            background:rgb(200,100,120);
-            border-radius: 50px;
-            color:white;
-            position:absolute;
-            bottom:-35px;
-            border:3px solid white;
-        }
-        .btn:hover{
-            border:3px solid black;
-        }
-        .btn a {
-            line-height: 50px;
-            text-align: center;
-            margin-left: 10px;
-            text-decoration: none;
-            color:white;
-            padding:10px;
-        }
-        .add-contract{
-            left: 200px;
-        }
-        .user-name{
-            right:350px;
-        }
-        .log-out{
-            right: 150px;
-        }
-        #all-contracts{
-            /* width: 500px; */
-            height: 400px;
-            margin: auto;
-            overflow-y: scroll;
-        }
-        .contract{
-            width:140px;
-            height: 180px;
-            background: orange;
-            display: inline-block;
-            margin-left: 70px;
-            margin-top: 30px;
-            position: relative;
-        }
-        .contract-option{
-            width:inherit;
-            height: 30px;
-            background: red;
-            margin-top:5px;
-            display: inline-block;
-            position: absolute;
-            text-align: center;
-            cursor: pointer;
-        }
-        .contract-option:hover{
-            background: cadetblue;
-            color: white;
-        }
-        .edit{
-            top:0px;
-        }
-        .delete{
-            top:40px;
-        }
-        .title{
-            width:inherit;
-            height: 30px;
-            margin-top:5px;
-            position: absolute;
-            text-align: center;
-            top:80px;
-        }
-    </style>
+    <link rel="stylesheet" href="/stylesheets/home.css">
 </head>
 <body>
     
     <div id='content'>
         <div id='header'>
-            <div class='btn add-contract'><a href='/contractAdd'>+ contract</a></div>
-            <div class='btn user-name'><a href=''><%= user.username%></a></div>
+            <div class='btn add-contract'><a href='/addContract'>+ contract</a></div>
+            <div class='btn user-name'><p style='text-align:center;'> <%= user.username%> </p></div>
             <div class='btn log-out'><a href='/LogOut'>Log-out</a></div>
         </div>
         <div id='content-body'>

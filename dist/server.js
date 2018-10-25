@@ -11,6 +11,7 @@ var ExpressSession = require("express-session");
 var loginMiddleware_1 = require("./middlewares/loginMiddleware");
 /* import Controllers*/
 var UserController_1 = require("./controllers/UserController");
+var ContractController_1 = require("./controllers/ContractController");
 var Server = /** @class */ (function () {
     function Server() {
         this.app = express();
@@ -30,15 +31,17 @@ var Server = /** @class */ (function () {
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: false }));
         this.app.use(cookieParser("SOME-SECRET-WORD"));
-        this.app.use(express.static(path.join(__dirname, 'public')));
-        this.app.use(express.static(path.join(__dirname, 'views')));
+        console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJJJJJJJJJJJJJJJJDDDDDDDDDDdd");
+        console.log(__dirname);
+        this.app.use(express.static(path.join(__dirname, '../public')));
+        this.app.use(express.static(path.join(__dirname, '../views')));
         //init db connection
         DB_1.DB.init();
+        //express session init
         this.app.use(ExpressSession({ name: 'user_sid', secret: 'somerandonstuffs', resave: false, saveUninitialized: true, }));
         //active middlwares
         this.app.use(loginMiddleware_1.AuthenticationMiddleware.cookieSafe);
         this.app.use(loginMiddleware_1.AuthenticationMiddleware.loginCheck);
-        // this.app.use(myMiddleware);
         //catch 404 and forward to error handler
         this.app.use(function (err, req, res, next) {
             err.status = 404;
@@ -53,6 +56,7 @@ var Server = /** @class */ (function () {
         router = express.Router();
         /* All Controllers goes here */
         UserController_1.UserController.create(router);
+        ContractController_1.ContractController.create(router);
         this.app.use(router);
     };
     /* declare api endpoints*/

@@ -1,0 +1,18 @@
+#content{
+    width:350px;
+    height: 300px;;
+    margin: 200px auto;
+    border: 2px solid seagreen;
+    background: cadetblue;
+    text-align: center;
+    margin: 50px auto;
+}
+
+#data{
+    margin-top:100px;
+    color:white;
+}
+
+body{
+    background: rosybrown;
+}

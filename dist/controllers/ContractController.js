@@ -48,90 +48,94 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var DB_1 = require("./DB");
-var Contract = /** @class */ (function (_super) {
-    __extends(Contract, _super);
-    function Contract(title, company, price_year, user_id) {
-        if (user_id === void 0) { user_id = null; }
-        var _this = _super.call(this) || this;
-        _this.title = title;
-        _this.company = company;
-        _this.price_year = price_year;
-        _this.user_id = user_id;
-        return _this;
+var BaseController_1 = require("./BaseController");
+var UserModel_1 = require("../models/UserModel");
+var ContractModel_1 = require("../models/ContractModel");
+/**
+ * Controller Index
+ */
+var ContractController = /** @class */ (function (_super) {
+    __extends(ContractController, _super);
+    /**
+     * Constructor
+     */
+    function ContractController() {
+        return _super.call(this) || this;
     }
-    Contract.prototype.save = function () {
+    ContractController.create = function (router) {
+        //log
+        console.log("[ContractController::create] Creating ContractController route:");
+        //contract view and logic
+        router.get("/addContract", function (req, res, next) {
+            new ContractController().contractView(req, res, next);
+        });
+        router.post("/addContract", function (req, res, next) {
+            new ContractController().contractLogic(req, res, next);
+        });
+        // add more routes
+    };
+    ContractController.prototype.index = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var _this = this;
+            var options;
             return __generator(this, function (_a) {
-                return [2 /*return*/, new Promise(function (resolve) {
-                        if (_this.id == undefined)
-                            _this.insertNew();
-                        else
-                            _this.updateExisting();
-                        resolve(true);
-                    })];
+                //set custom title
+                this.title = "Show login page";
+                options = {
+                    "message": "Lets freak out",
+                };
+                //render template
+                this.render(req, res, "index", options);
+                return [2 /*return*/];
             });
         });
     };
-    Contract.prototype.insertNew = function () {
+    ContractController.prototype.contractView = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var params;
+            var options;
             return __generator(this, function (_a) {
-                params = [this.title, this.company, this.price_year, this.user_id];
-                return [2 /*return*/, new Promise(function (resolve) {
-                        DB_1.DB.conn.query("INSERT INTO " + Contract.tableName + " (title, company_name, price_year, user_id) VALUES (?,?,?,?)", params, function (err, rows) {
-                            if (err)
-                                throw err;
-                            resolve(true);
-                        });
-                    })];
+                //set custom title
+                this.title = "Show new contract page";
+                options = {
+                    "message": "",
+                };
+                //render template
+                this.render(req, res, "contract", options);
+                return [2 /*return*/];
             });
         });
     };
-    ;
-    Contract.prototype.updateExisting = function () {
+    ContractController.prototype.contractLogic = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var params;
+            var title, company, year_price, contract, user, contracts, options;
             return __generator(this, function (_a) {
-                params = [this.title, this.company, this.price_year, this.id];
-                return [2 /*return*/, new Promise(function (resolve) {
-                        DB_1.DB.conn.query("UPDATE " + Contract.tableName + " title = ?, company_name = ?, price_year = ? WHERE id = ?", params, function (err, rows) {
-                            if (err)
-                                throw err;
-                            resolve(true);
-                        });
-                    })];
+                switch (_a.label) {
+                    case 0:
+                        //set custom title
+                        this.title = "Logic to save new contract";
+                        title = req.body.title;
+                        company = req.body.company;
+                        year_price = req.body.year_price;
+                        contract = new ContractModel_1.Contract(title, company, year_price, req.session.userId);
+                        return [4 /*yield*/, contract.save()];
+                    case 1:
+                        _a.sent();
+                        return [4 /*yield*/, UserModel_1.User.findById(req.session.userId)];
+                    case 2:
+                        user = _a.sent();
+                        return [4 /*yield*/, ContractModel_1.Contract.takeAll(user)];
+                    case 3:
+                        contracts = _a.sent();
+                        options = {
+                            "user": user,
+                            "contracts": contracts
+                        };
+                        //render template
+                        this.render(req, res, "home", options);
+                        return [2 /*return*/];
+                }
             });
         });
     };
-    ;
-    //static functions
-    Contract.takeAll = function (user) {
-        return __awaiter(this, void 0, void 0, function () {
-            var params, result;
-            var _this = this;
-            return __generator(this, function (_a) {
-                params = [user.id];
-                result = [];
-                return [2 /*return*/, new Promise(function (resolve) {
-                        DB_1.DB.conn.query("SELECT * FROM " + _this.tableName + " WHERE user_id = ?", params, function (err, rows) {
-                            if (err)
-                                throw err;
-                            if (rows.length) {
-                                for (var _i = 0, rows_1 = rows; _i < rows_1.length; _i++) {
-                                    var row = rows_1[_i];
-                                    result.push(new Contract(row.title, row.company_name, row.price_year, row.id));
-                                }
-                            }
-                            resolve(result);
-                        });
-                    })];
-            });
-        });
-    };
-    //name of table in our DB
-    Contract.tableName = 'contract';
-    return Contract;
-}(DB_1.DB));
-exports.Contract = Contract;
+    return ContractController;
+}(BaseController_1.BaseController));
+exports.ContractController = ContractController;

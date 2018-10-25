@@ -13,7 +13,7 @@ import {AuthenticationMiddleware} from './middlewares/loginMiddleware';
 
 /* import Controllers*/
 import { UserController } from "./controllers/UserController";
-
+import {ContractController} from "./controllers/ContractController";
 
 export class Server {
 
@@ -41,13 +41,14 @@ export class Server {
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: false }));
         this.app.use(cookieParser("SOME-SECRET-WORD"));
-        this.app.use(express.static(path.join(__dirname, 'public')));
-        this.app.use(express.static(path.join(__dirname, 'views')));
+        console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJJJJJJJJJJJJJJJJDDDDDDDDDDdd")
+        console.log(__dirname)
+        this.app.use(express.static(path.join(__dirname, '../public')));
+        this.app.use(express.static(path.join(__dirname, '../views')));
         //init db connection
         DB.init();
-
+        //express session init
         this.app.use(ExpressSession({name:'user_sid', secret: 'somerandonstuffs', resave: false, saveUninitialized: true, }));
-        
         //active middlwares
         this.app.use(AuthenticationMiddleware.cookieSafe);
         this.app.use(AuthenticationMiddleware.loginCheck);
@@ -68,6 +69,7 @@ export class Server {
         
         /* All Controllers goes here */
         UserController.create(router);
+        ContractController.create(router);
 
         this.app.use(router);
     }

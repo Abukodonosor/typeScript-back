@@ -11,12 +11,12 @@ export class Contract extends DB{
     //name of table in our DB
     static tableName: string = 'contract';
 
-    constructor(title: string, company:string, price_year:number, id:number = null){
+    constructor(title: string, company:string, price_year:number, user_id:number = null){
         super();
         this.title = title;
         this.company = company;
         this.price_year = price_year;
-        this.id = id;
+        this.user_id = user_id;
 
     }
 
@@ -31,9 +31,9 @@ export class Contract extends DB{
     }
 
     public async insertNew(){
-        var params = [this.title, this.company, this.price_year,];
+        var params = [this.title, this.company, this.price_year,this.user_id];
         return new Promise(resolve=>{
-            DB.conn.query(`INSERT INTO ${Contract.tableName} (title, company, price_year, user_id) VALUES (?,?,?,?)`,params,(err,rows)=>{
+            DB.conn.query(`INSERT INTO ${Contract.tableName} (title, company_name, price_year, user_id) VALUES (?,?,?,?)`,params,(err,rows)=>{
                 if(err)
                     throw err;
                 
@@ -45,7 +45,7 @@ export class Contract extends DB{
     public async updateExisting(){
         var params = [this.title, this.company, this.price_year, this.id];
         return new Promise(resolve=>{
-            DB.conn.query(`UPDATE ${Contract.tableName} title = ?, company = ?, price_year = ? WHERE id = ?`,params,(err,rows)=>{
+            DB.conn.query(`UPDATE ${Contract.tableName} title = ?, company_name = ?, price_year = ? WHERE id = ?`,params,(err,rows)=>{
                 if(err)
                     throw err;
                 resolve(true);

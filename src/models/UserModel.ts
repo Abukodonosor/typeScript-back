@@ -60,15 +60,38 @@ export class User extends DB implements UserInter{
     static async exist(email,password){
         var params = [email, password];
         return new Promise(resolve=>{
-            this.conn.query(`SELECT * FROM ${User.tableName} WHERE email = ? AND password = ?;`,params,(err,rows)=>{
+            this.conn.query(`SELECT * FROM ${User.tableName} WHERE email = ? AND password = ? LIMIT 1`,params,(err,rows)=>{
                 if(err)
                     throw err;
-
-                    console.log("name:"+rows[0].email);
                 if(rows.length)
                     resolve( {email:rows[0].email,password:rows[0].password,username:rows[0].username,id:rows[0].id} );
                 else
                     resolve(false);
+            });
+        });
+    }
+
+    static async existEmail(email){
+        var params = [email];
+        return new Promise(resolve=>{
+            this.conn.query(`SELECT * FROM ${User.tableName} WHERE email = ? LIMIT 1`,params,(err,rows)=>{
+                if(err)
+                    throw err;
+                if(rows.length)
+                    resolve( {email:rows[0].email,password:rows[0].password,username:rows[0].username,id:rows[0].id} );
+                else
+                    resolve(false);
+            });
+        });
+    }
+
+    static async findById(id){
+        var params = [id];
+        return new Promise(resolve=>{
+            this.conn.query(`SELECT * FROM ${User.tableName} WHERE id = ?`,params,(err,rows)=>{
+                if(err)
+                    throw err;
+                resolve( {email:rows[0].email,password:rows[0].password,username:rows[0].username,id:rows[0].id} );
             });
         });
     }

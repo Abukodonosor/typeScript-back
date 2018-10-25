@@ -118,14 +118,48 @@ var User = /** @class */ (function (_super) {
             return __generator(this, function (_a) {
                 params = [email, password];
                 return [2 /*return*/, new Promise(function (resolve) {
-                        _this.conn.query("SELECT * FROM " + User.tableName + " WHERE email = ? AND password = ?;", params, function (err, rows) {
+                        _this.conn.query("SELECT * FROM " + User.tableName + " WHERE email = ? AND password = ? LIMIT 1", params, function (err, rows) {
                             if (err)
                                 throw err;
-                            console.log("name:" + rows[0].email);
                             if (rows.length)
                                 resolve({ email: rows[0].email, password: rows[0].password, username: rows[0].username, id: rows[0].id });
                             else
                                 resolve(false);
+                        });
+                    })];
+            });
+        });
+    };
+    User.existEmail = function (email) {
+        return __awaiter(this, void 0, void 0, function () {
+            var params;
+            var _this = this;
+            return __generator(this, function (_a) {
+                params = [email];
+                return [2 /*return*/, new Promise(function (resolve) {
+                        _this.conn.query("SELECT * FROM " + User.tableName + " WHERE email = ? LIMIT 1", params, function (err, rows) {
+                            if (err)
+                                throw err;
+                            if (rows.length)
+                                resolve({ email: rows[0].email, password: rows[0].password, username: rows[0].username, id: rows[0].id });
+                            else
+                                resolve(false);
+                        });
+                    })];
+            });
+        });
+    };
+    User.findById = function (id) {
+        return __awaiter(this, void 0, void 0, function () {
+            var params;
+            var _this = this;
+            return __generator(this, function (_a) {
+                params = [id];
+                return [2 /*return*/, new Promise(function (resolve) {
+                        _this.conn.query("SELECT * FROM " + User.tableName + " WHERE id = ?", params, function (err, rows) {
+                            if (err)
+                                throw err;
+                            resolve({ email: rows[0].email, password: rows[0].password, username: rows[0].username, id: rows[0].id });
                         });
                     })];
             });

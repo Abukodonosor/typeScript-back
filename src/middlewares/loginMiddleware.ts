@@ -4,7 +4,6 @@ import {Request,Response,NextFunction} from 'express';
 export class  AuthenticationMiddleware{
 
     public static loginCheck(req:Request, res:Response, next:NextFunction){
-        console.log("OVO RADI!!!!!!!!");
         if (req.session.user && req.cookies.user_sid) {
             res.redirect('/');
         } else {

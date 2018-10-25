@@ -64,64 +64,145 @@ var UserController = /** @class */ (function (_super) {
     }
     UserController.create = function (router) {
         //log
-        console.log("[IndexController::create] Creating IndexController route:");
-        //add page route
+        console.log("[UserController::create] Creating UserController route:");
+        //index page 
         router.get("/", function (req, res, next) {
             new UserController().index(req, res, next);
         });
+        /* LogIn and LogOut logic */
         router.post('/home', function (req, res, next) {
             new UserController().logIn(req, res, next);
         });
         router.get("/LogOut", function (req, res, next) {
             new UserController().logOut(req, res, next);
         });
+        /* Register view and logic */
+        router.get('/register', function (req, res, next) {
+            new UserController().register(req, res, next);
+        });
+        router.post('/register', function (req, res, next) {
+            new UserController().registerAuth(req, res, next);
+        });
         // add more routes
     };
     UserController.prototype.index = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var noviCovek, answer, options;
+            var options;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        //set custom title
-                        this.title = "This is title of my action";
-                        noviCovek = new UserModel_1.User("djoka@gmail.com", "djoka123", "djoka123");
-                        return [4 /*yield*/, noviCovek.save()];
-                    case 1:
-                        answer = _a.sent();
-                        console.log("ANSWER IS :" + answer);
-                        options = {
-                            "message": "Lets freak out",
-                        };
-                        //render template
-                        this.render(req, res, "index", options);
-                        return [2 /*return*/];
-                }
+                //set custom title
+                this.title = "Show login page";
+                options = {
+                    "message": "Lets freak out",
+                };
+                //render template
+                this.render(req, res, "index", options);
+                return [2 /*return*/];
             });
         });
     };
     //login route, check if user exist => true [fatch all contracts and pass them to the view]: else [ render log page with error message]
     UserController.prototype.logIn = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var email, password, user, contracts, options;
+            var email, password, options, user, options, contracts, options;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        //set custom title
+                        this.title = "Auth Login and send user to home page";
                         email = req.body.email;
                         password = req.body.password;
+                        //if email or password are not provided => here we could make one more class who will take care about validation of our fields
+                        if (email == '' || password == '') {
+                            options = {
+                                "message": "Pls fill all fields",
+                            };
+                            //render template
+                            this.render(req, res, "index", options);
+                        }
                         return [4 /*yield*/, UserModel_1.User.exist(email, password)];
                     case 1:
                         user = _a.sent();
-                        return [4 /*yield*/, ContractModel_1.Contract.takeAll(user)];
-                    case 2:
+                        if (!(user == false)) return [3 /*break*/, 2];
+                        options = {
+                            "message": "Incoret user or password!",
+                        };
+                        //render template
+                        this.render(req, res, "index", options);
+                        return [3 /*break*/, 4];
+                    case 2: return [4 /*yield*/, ContractModel_1.Contract.takeAll(user)];
+                    case 3:
                         contracts = _a.sent();
+                        req.session.userId = user['id'];
                         options = {
                             "user": user,
                             "contracts": contracts
                         };
                         //render template
                         this.render(req, res, "home", options);
-                        return [2 /*return*/];
+                        _a.label = 4;
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    //get routre for register
+    UserController.prototype.register = function (req, res, next) {
+        return __awaiter(this, void 0, void 0, function () {
+            var options;
+            return __generator(this, function (_a) {
+                //set custom title
+                this.title = "Register user view page";
+                options = {
+                    "message": "",
+                };
+                //render template
+                this.render(req, res, "register", options);
+                return [2 /*return*/];
+            });
+        });
+    };
+    UserController.prototype.registerAuth = function (req, res, next) {
+        return __awaiter(this, void 0, void 0, function () {
+            var email, password, user, options, user_status, options, options;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        //set custom title
+                        this.title = "Register user view page";
+                        email = req.body.email;
+                        password = req.body.password;
+                        //if email or password are not provided
+                        if (email == '' || password == '') {
+                            options = {
+                                "message": "Pls fill all input fields",
+                            };
+                            //render template
+                            this.render(req, res, "register", options);
+                        }
+                        return [4 /*yield*/, UserModel_1.User.existEmail(email)];
+                    case 1:
+                        user_status = _a.sent();
+                        if (!(user_status == false)) return [3 /*break*/, 4];
+                        return [4 /*yield*/, new UserModel_1.User(email, password)];
+                    case 2:
+                        user = _a.sent();
+                        return [4 /*yield*/, user.save()];
+                    case 3:
+                        _a.sent();
+                        options = {
+                            "message": "Enter your credentials",
+                        };
+                        //render template
+                        this.render(req, res, "index", options);
+                        return [3 /*break*/, 5];
+                    case 4:
+                        options = {
+                            "message": "email is allready taken",
+                        };
+                        //render template
+                        this.render(req, res, "register", options);
+                        _a.label = 5;
+                    case 5: return [2 /*return*/];
                 }
             });
         });
@@ -130,6 +211,9 @@ var UserController = /** @class */ (function (_super) {
     UserController.prototype.logOut = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
+                //set custom title
+                this.title = "LogOut page logic (delete cookie)";
+                delete req.session.userId;
                 if (req.session.user && req.cookies.user_sid) {
                     res.clearCookie('user_sid');
                     res.redirect('/');

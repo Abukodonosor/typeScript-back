@@ -11,13 +11,13 @@ export class UserController extends BaseController {
 
   public static create(router: Router) {
     //log
-    console.log(`[IndexController::create] Creating IndexController route:`);
+    console.log(`[UserController::create] Creating UserController route:`);
 
-    //add page route
+    //index page 
     router.get("/", (req: Request, res: Response, next: NextFunction) => {
       new UserController().index(req, res, next);
     });
-
+    /* LogIn and LogOut logic */
     router.post('/home', (req: Request, res: Response, next: NextFunction) => {
       new UserController().logIn(req, res, next);
     });
@@ -26,6 +26,7 @@ export class UserController extends BaseController {
       new UserController().logOut(req, res, next);
     });
 
+    /* Register view and logic */
     router.get('/register', (req: Request, res: Response, next: NextFunction) => {
       new UserController().register(req,res,next);
     });
@@ -49,15 +50,9 @@ export class UserController extends BaseController {
     //set custom title
     this.title = "Show login page";
 
-    var noviCovek = new User("djoka@gmail.com","djoka123","djoka123");
-
-    var answer = await noviCovek.save();
-    console.log("ANSWER IS :"+answer);
-
     //set options
     let options: Object = {
       "message": "Lets freak out",
-      // "covek": JSON.stringify(noviCovek)
     };
     //render template
     this.render(req, res, "index", options);
@@ -69,21 +64,39 @@ export class UserController extends BaseController {
     this.title = "Auth Login and send user to home page";
 
     let email = req.body.email;
-    let password = req.body.password;
-
+    let password = req.body.password; 
+  
+    //if email or password are not provided => here we could make one more class who will take care about validation of our fields
+    if(email == '' || password == ''){
+      //set options
+      let options: Object = {
+      "message": "Pls fill all fields",
+      };
+      //render template
+      this.render(req, res, "index", options);
+    }
     //check if user with this parametars exist
     var user = await User.exist(email,password);
 
-    //list all contracts and send with user.js
-    let contracts = await Contract.takeAll(user);
-
-    //set options
-    let options: Object = {
-      "user": user,
-      "contracts": contracts
-    };
-    //render template
-    this.render(req,res, "home", options);
+    if(user == false){
+      //set options
+      let options: Object = {
+        "message": "Incoret user or password!",
+      };
+      //render template
+      this.render(req, res, "index", options);
+    }else{
+      //list all contracts and send with user.js
+      let contracts = await Contract.takeAll(user);
+      req.session.userId = user['id'];
+      //set options
+      let options: Object = {
+        "user": user,
+        "contracts": contracts
+      };
+      //render template
+      this.render(req,res, "home", options);
+    }
 
   }
 
@@ -94,11 +107,10 @@ export class UserController extends BaseController {
 
     //set options
     let options: Object = {
-      "message": "Lets freak out",
+      "message": "",
     };
     //render template
     this.render(req, res, "register", options);
-
   }
 
   public async registerAuth(req: Request, res: Response, next: NextFunction) {
@@ -107,29 +119,51 @@ export class UserController extends BaseController {
     
     let email = req.body.email;
     let password = req.body.password;
-    
-    //ako ne postoji napravi, ako postoji vrati gresku da izabere opet
+    let user;
 
-    //set options
-    let options: Object = {
-      "message": "Enter your credentials",
-    };
-    //render template
-    this.render(req, res, "index", options);
+    //if email or password are not provided
+    if(email == '' || password == ''){
+      //set options
+      let options: Object = {
+      "message": "Pls fill all input fields",
+      };
+      //render template
+      this.render(req, res, "register", options);
+    }
+
+    //if user with that email addres exist
+    let user_status = await User.existEmail(email);
+    if(user_status == false){
+      user = await new User(email,password);
+      await user.save();
+      //set options
+      let options: Object = {
+        "message": "Enter your credentials",
+      };
+      //render template
+      this.render(req, res, "index", options);
+    }else{
+      //set options
+      let options: Object = {
+        "message": "email is allready taken",
+      };
+      //render template
+      this.render(req, res, "register", options);
+    }
   }
 
   //logOut route
   public async logOut(req: Request, res: Response, next: NextFunction) {
-
+    //set custom title
+    this.title = "LogOut page logic (delete cookie)";
+    delete req.session.userId;
     if (req.session.user && req.cookies.user_sid) {
       res.clearCookie('user_sid');
       res.redirect('/');
     } else {
       res.redirect('/');
     }
-
   }
-
 
 
 }
