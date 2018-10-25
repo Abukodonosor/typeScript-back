@@ -89,6 +89,9 @@ export class UserController extends BaseController {
       //list all contracts and send with user.js
       let contracts = await Contract.takeAll(user);
       req.session.userId = user['id'];
+      console.log("SVII OVII UGOVORI")
+      console.log(contracts)
+
       //set options
       let options: Object = {
         "user": user,

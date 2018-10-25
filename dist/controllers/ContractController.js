@@ -51,6 +51,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var BaseController_1 = require("./BaseController");
 var UserModel_1 = require("../models/UserModel");
 var ContractModel_1 = require("../models/ContractModel");
+var loginMiddleware_1 = require("../middlewares/loginMiddleware");
 /**
  * Controller Index
  */
@@ -66,11 +67,21 @@ var ContractController = /** @class */ (function (_super) {
         //log
         console.log("[ContractController::create] Creating ContractController route:");
         //contract view and logic
-        router.get("/addContract", function (req, res, next) {
+        router.get("/addContract", loginMiddleware_1.AuthenticationMiddleware.isAuth, function (req, res, next) {
             new ContractController().contractView(req, res, next);
         });
-        router.post("/addContract", function (req, res, next) {
+        router.post("/addContract", loginMiddleware_1.AuthenticationMiddleware.isAuth, function (req, res, next) {
             new ContractController().contractLogic(req, res, next);
+        });
+        //edit contract and logic
+        router.get("/editContract/:id", loginMiddleware_1.AuthenticationMiddleware.isAuth, function (req, res, next) {
+            new ContractController().contractViewEdit(req, res, next);
+        });
+        router.post("/editContract", loginMiddleware_1.AuthenticationMiddleware.isAuth, function (req, res, next) {
+            new ContractController().contractLogicEdit(req, res, next);
+        });
+        router.get("/deleteContract/:id", loginMiddleware_1.AuthenticationMiddleware.isAuth, function (req, res, next) {
+            new ContractController().deleteContract(req, res, next);
         });
         // add more routes
     };
@@ -119,6 +130,90 @@ var ContractController = /** @class */ (function (_super) {
                         return [4 /*yield*/, contract.save()];
                     case 1:
                         _a.sent();
+                        return [4 /*yield*/, UserModel_1.User.findById(req.session.userId)];
+                    case 2:
+                        user = _a.sent();
+                        return [4 /*yield*/, ContractModel_1.Contract.takeAll(user)];
+                    case 3:
+                        contracts = _a.sent();
+                        options = {
+                            "user": user,
+                            "contracts": contracts
+                        };
+                        //render template
+                        this.render(req, res, "home", options);
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    ContractController.prototype.contractViewEdit = function (req, res, next) {
+        return __awaiter(this, void 0, void 0, function () {
+            var contract_id, contract, options;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        //set custom title
+                        this.title = "EDIT contract page";
+                        contract_id = req.params.id;
+                        return [4 /*yield*/, ContractModel_1.Contract.findById(contract_id)];
+                    case 1:
+                        contract = _a.sent();
+                        options = {
+                            "contract": contract,
+                        };
+                        //render template
+                        this.render(req, res, "contractEdit", options);
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    ContractController.prototype.contractLogicEdit = function (req, res, next) {
+        return __awaiter(this, void 0, void 0, function () {
+            var title, company, year_price, id, contract, user, contracts, options;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        //set custom title
+                        this.title = "EDIT LOGIC contract page";
+                        title = req.body.title;
+                        company = req.body.company;
+                        year_price = req.body.year_price;
+                        id = req.body.id;
+                        contract = new ContractModel_1.Contract(title, company, year_price, req.session.userId, id);
+                        return [4 /*yield*/, contract.updateExisting()];
+                    case 1:
+                        _a.sent();
+                        return [4 /*yield*/, UserModel_1.User.findById(req.session.userId)];
+                    case 2:
+                        user = _a.sent();
+                        return [4 /*yield*/, ContractModel_1.Contract.takeAll(user)];
+                    case 3:
+                        contracts = _a.sent();
+                        options = {
+                            "user": user,
+                            "contracts": contracts
+                        };
+                        //render template
+                        this.render(req, res, "home", options);
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    ContractController.prototype.deleteContract = function (req, res, next) {
+        return __awaiter(this, void 0, void 0, function () {
+            var contract_id, contract, user, contracts, options;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        //set custom title
+                        this.title = "Delete contract";
+                        contract_id = req.params.id;
+                        return [4 /*yield*/, ContractModel_1.Contract.deleteById(contract_id)];
+                    case 1:
+                        contract = _a.sent();
                         return [4 /*yield*/, UserModel_1.User.findById(req.session.userId)];
                     case 2:
                         user = _a.sent();

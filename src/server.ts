@@ -41,8 +41,7 @@ export class Server {
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: false }));
         this.app.use(cookieParser("SOME-SECRET-WORD"));
-        console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJJJJJJJJJJJJJJJJDDDDDDDDDDdd")
-        console.log(__dirname)
+
         this.app.use(express.static(path.join(__dirname, '../public')));
         this.app.use(express.static(path.join(__dirname, '../views')));
         //init db connection
@@ -76,7 +75,7 @@ export class Server {
 
     /* declare api endpoints*/
     public api(){
-
+        
     }
 
 

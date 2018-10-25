@@ -17,13 +17,13 @@
         </div>
         <div id='content-body'>
             <div id='all-contracts'>
-            <% for (contract of contracts) { %>
+            <% contracts.forEach(function(contract) { %>
                 <div class='contract' data-id='<%= contract.id %>'>
-                    <div class='contract-option edit'>edit</div>
-                    <div class='contract-option delete'>delete</div>
+                    <div class='contract-option edit'><a href="/editContract/<%= contract.id %>">edit</a></div>
+                    <div class='contract-option delete'><a href='/deleteContract/<%= contract.id %>'>delete</a></div>
                     <h4 class='title'><%= contract.title %></h4>
                 </div>
-            <% } %>
+            <% });%>
                 
             </div>
         </div>

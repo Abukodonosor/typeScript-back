@@ -4,8 +4,15 @@ var AuthenticationMiddleware = /** @class */ (function () {
     function AuthenticationMiddleware() {
     }
     AuthenticationMiddleware.loginCheck = function (req, res, next) {
-        console.log("OVO RADI!!!!!!!!");
         if (req.session.user && req.cookies.user_sid) {
+            res.redirect('/');
+        }
+        else {
+            next();
+        }
+    };
+    AuthenticationMiddleware.isAuth = function (req, res, next) {
+        if (!req.session.userId) {
             res.redirect('/');
         }
         else {

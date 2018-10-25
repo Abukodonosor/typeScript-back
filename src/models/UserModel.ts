@@ -47,7 +47,7 @@ export class User extends DB implements UserInter{
     public async updateExisting(){
         var params = [this.username, this.password, this.email, this.id];
         return new Promise(resolve=>{
-            DB.conn.query(`UPDATE ${User.tableName} username = ?, password = ?, email = ? WHERE id = ?`,params,(err,rows)=>{
+            DB.conn.query(`UPDATE ${User.tableName} SET username = ?, password = ?, email = ? WHERE id = ?`,params,(err,rows)=>{
                 if(err)
                     throw err;
                 resolve(true);

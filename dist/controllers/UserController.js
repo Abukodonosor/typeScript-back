@@ -133,6 +133,8 @@ var UserController = /** @class */ (function (_super) {
                     case 3:
                         contracts = _a.sent();
                         req.session.userId = user['id'];
+                        console.log("SVII OVII UGOVORI");
+                        console.log(contracts);
                         options = {
                             "user": user,
                             "contracts": contracts

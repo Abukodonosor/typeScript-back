@@ -6,7 +6,15 @@ export class  AuthenticationMiddleware{
     public static loginCheck(req:Request, res:Response, next:NextFunction){
         if (req.session.user && req.cookies.user_sid) {
             res.redirect('/');
-        } else {
+        }else {
+            next();
+        }    
+    }
+
+    public static isAuth(req:Request, res:Response, next:NextFunction){
+        if (!req.session.userId) {
+            res.redirect('/');
+        }else {
             next();
         }    
     }

@@ -51,13 +51,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var DB_1 = require("./DB");
 var Contract = /** @class */ (function (_super) {
     __extends(Contract, _super);
-    function Contract(title, company, price_year, user_id) {
+    function Contract(title, company, price_year, user_id, id) {
         if (user_id === void 0) { user_id = null; }
+        if (id === void 0) { id = null; }
         var _this = _super.call(this) || this;
         _this.title = title;
         _this.company = company;
         _this.price_year = price_year;
         _this.user_id = user_id;
+        _this.id = id;
         return _this;
     }
     Contract.prototype.save = function () {
@@ -96,7 +98,7 @@ var Contract = /** @class */ (function (_super) {
             return __generator(this, function (_a) {
                 params = [this.title, this.company, this.price_year, this.id];
                 return [2 /*return*/, new Promise(function (resolve) {
-                        DB_1.DB.conn.query("UPDATE " + Contract.tableName + " title = ?, company_name = ?, price_year = ? WHERE id = ?", params, function (err, rows) {
+                        DB_1.DB.conn.query("UPDATE " + Contract.tableName + " SET title = ?, company_name = ?, price_year = ? WHERE id = ?", params, function (err, rows) {
                             if (err)
                                 throw err;
                             resolve(true);
@@ -121,10 +123,48 @@ var Contract = /** @class */ (function (_super) {
                             if (rows.length) {
                                 for (var _i = 0, rows_1 = rows; _i < rows_1.length; _i++) {
                                     var row = rows_1[_i];
-                                    result.push(new Contract(row.title, row.company_name, row.price_year, row.id));
+                                    result.push(new Contract(row.title, row.company_name, row.price_year, row.user_id, row.id));
                                 }
                             }
                             resolve(result);
+                        });
+                    })];
+            });
+        });
+    };
+    Contract.findById = function (id) {
+        return __awaiter(this, void 0, void 0, function () {
+            var params;
+            var _this = this;
+            return __generator(this, function (_a) {
+                params = [id];
+                return [2 /*return*/, new Promise(function (resolve) {
+                        _this.conn.query("SELECT * FROM " + Contract.tableName + " WHERE id = ?", params, function (err, rows) {
+                            if (err)
+                                throw err;
+                            resolve({
+                                title: rows[0].title,
+                                company: rows[0].company_name,
+                                price_year: rows[0].price_year,
+                                user_id: rows[0].user_id,
+                                id: rows[0].id
+                            });
+                        });
+                    })];
+            });
+        });
+    };
+    Contract.deleteById = function (id) {
+        return __awaiter(this, void 0, void 0, function () {
+            var params;
+            var _this = this;
+            return __generator(this, function (_a) {
+                params = [id];
+                return [2 /*return*/, new Promise(function (resolve) {
+                        _this.conn.query("DELETE FROM " + Contract.tableName + " WHERE id = ?", params, function (err, rows) {
+                            if (err)
+                                throw err;
+                            resolve(true);
                         });
                     })];
             });

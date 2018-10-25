@@ -100,7 +100,7 @@ var User = /** @class */ (function (_super) {
             return __generator(this, function (_a) {
                 params = [this.username, this.password, this.email, this.id];
                 return [2 /*return*/, new Promise(function (resolve) {
-                        DB_1.DB.conn.query("UPDATE " + User.tableName + " username = ?, password = ?, email = ? WHERE id = ?", params, function (err, rows) {
+                        DB_1.DB.conn.query("UPDATE " + User.tableName + " SET username = ?, password = ?, email = ? WHERE id = ?", params, function (err, rows) {
                             if (err)
                                 throw err;
                             resolve(true);

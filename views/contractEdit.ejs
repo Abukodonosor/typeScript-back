@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>New Contract</title>
+    <link rel="stylesheet" href="/stylesheets/newContract.css">
+</head>
+<body>
+    
+    <div id="content">
+        <div id='data'>
+        <h2>Change the data about your contract:</h2>
+            <form action='/editContract' method='POST'>
+                title:<input name='title' type="text"  value="<%= contract.title %>"/><br/>
+                Coorporation:<input name='company' type="text" value="<%= contract.company %>" /><br/>
+                year price:<input name='year_price' type="text" value="<%= contract.price_year %>" /><br/>
+                <input type='text' name='id' value="<%= contract.id %>" style="visibility: hidden;" />
+                <input type='submit' value='edit submit'/>
+            </form>
+        </div>
+
+    </div>
+
+</body>
+</html>
